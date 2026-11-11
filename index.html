@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Timestamp 現場記事</title>
+<title>Timestamp</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:#fafafa;color:#212121;font-family:Roboto,"Noto Sans TC",system-ui,sans-serif}
@@ -97,37 +97,37 @@ main{padding:4px 12px 120px}
 </head>
 <body>
 <header>
-  <button class="ib" id="bMenu" aria-label="選單"><svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+  <button class="ib" id="bMenu" data-al="menu"><svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
   <h1>Timestamp</h1>
-  <button class="ib" id="bSearch" aria-label="搜尋"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></button>
-  <button class="ib" id="bCal" aria-label="跳到日期"><svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg></button>
+  <button class="ib" id="bSearch" data-al="search"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></button>
+  <button class="ib" id="bCal" data-al="jump"><svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg></button>
 </header>
-<div id="searchbar"><input id="q" type="search" placeholder="搜尋記事（機台、工單、錯誤碼…）"></div>
+<div id="searchbar"><input id="q" type="search" data-ph="searchPh"></div>
 <main id="list"></main>
-<button id="fab" aria-label="新增"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+<button id="fab" data-al="add"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
 
 <div id="ed">
   <div class="bar">
-    <button class="ib" id="eBack" aria-label="返回"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
-    <div class="ttl" id="eTitle">新記事</div>
-    <button class="sv" id="eSave">儲存</button>
+    <button class="ib" id="eBack" data-al="back"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <div class="ttl" id="eTitle"></div>
+    <button class="sv" id="eSave" data-i18n="save"></button>
   </div>
   <div class="body">
     <div class="flds">
-      <input id="fCust" list="dlCust" placeholder="客戶別" autocomplete="off">
-      <input id="fMach" list="dlMach" placeholder="機台別" autocomplete="off">
+      <input id="fCust" list="dlCust" data-ph="custPh" autocomplete="off">
+      <input id="fMach" list="dlMach" data-ph="machPh" autocomplete="off">
     </div>
     <datalist id="dlCust"></datalist><datalist id="dlMach"></datalist>
     <div class="chips" id="chips"></div>
-    <textarea id="txt" placeholder="機台 / 工單 / 現象 / 處理…"></textarea>
+    <textarea id="txt" data-ph="txtPh"></textarea>
     <div class="tools">
-      <button class="tb" id="bCam"><svg viewBox="0 0 24 24"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zM9 2 7.17 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3.17L15 2H9zm3 15a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/></svg>拍照</button>
-      <button class="tb" id="bGal"><svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z"/></svg>相簿</button>
-      <button class="tb" id="bShare"><svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg>複製/分享</button>
+      <button class="tb" id="bCam"><svg viewBox="0 0 24 24"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zM9 2 7.17 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3.17L15 2H9zm3 15a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/></svg><span data-i18n="camera"></span></button>
+      <button class="tb" id="bGal"><svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z"/></svg><span data-i18n="gallery"></span></button>
+      <button class="tb" id="bShare"><svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg><span data-i18n="copy"></span></button>
     </div>
-    <div class="hint">點照片可加箭頭、圈選、畫筆、文字標註</div>
+    <div class="hint" data-i18n="hint"></div>
     <div class="eph" id="eph"></div>
-    <button class="del" id="eDel" style="display:none">刪除此記事</button>
+    <button class="del" id="eDel" style="display:none" data-i18n="del"></button>
   </div>
 </div>
 <input type="file" id="fCam" accept="image/*" capture="environment" hidden>
@@ -137,18 +137,19 @@ main{padding:4px 12px 120px}
 <div id="vw"><button class="x" id="vx">✕</button><img id="vimg" alt=""></div>
 <div id="menu"><div class="p">
   <h2>Timestamp</h2>
-  <button id="mExp">匯出備份（JSON，含照片）</button>
-  <button id="mImp">匯入備份</button>
-  <button id="mTxt">複製全部文字記事</button>
+  <button id="mExp" data-i18n="mExp"></button>
+  <button id="mImp" data-i18n="mImp"></button>
+  <button id="mTxt" data-i18n="mTxt"></button>
+  <button id="mLang" data-i18n="mLang"></button>
   <small id="mInfo"></small>
 </div></div>
 <div id="an">
-  <div class="top"><button id="aCancel">取消</button><b>標註照片</b><button id="aRestore" style="display:none">還原原圖</button><button class="pri" id="aSave">完成</button></div>
+  <div class="top"><button id="aCancel" data-i18n="aCancel"></button><b data-i18n="aTitle"></b><button id="aRestore" style="display:none" data-i18n="aRestore"></button><button class="pri" id="aSave" data-i18n="aDone"></button></div>
   <div class="stage" id="stage"><canvas id="acv"></canvas></div>
-  <div id="atb"><input id="atxt" placeholder="輸入標註文字"><button id="atOk">加入</button><button class="g" id="atNo">取消</button></div>
+  <div id="atb"><input id="atxt" data-ph="aTxtPh"><button id="atOk" data-i18n="aAdd"></button><button class="g" id="atNo" data-i18n="aCancel"></button></div>
   <div class="tools2">
     <div class="row" id="aTools">
-      <button data-tool="arrow" class="sel">↗ 箭頭</button><button data-tool="circle">◯ 圈選</button><button data-tool="pen">✎ 畫筆</button><button data-tool="text">T 文字</button>
+      <button data-tool="arrow" class="sel" data-i18n="aArrow"></button><button data-tool="circle" data-i18n="aCircle"></button><button data-tool="pen" data-i18n="aPen"></button><button data-tool="text" data-i18n="aText"></button>
     </div>
     <div class="row" id="aCols">
       <button class="col sel" data-c="#ff1744" style="background:#ff1744"></button>
@@ -156,7 +157,7 @@ main{padding:4px 12px 120px}
       <button class="col" data-c="#00e676" style="background:#00e676"></button>
       <button class="col" data-c="#2979ff" style="background:#2979ff"></button>
       <button class="col" data-c="#ffffff" style="background:#fff"></button>
-      <button id="aUndo">↶ 復原</button><button id="aClear">清除</button>
+      <button id="aUndo" data-i18n="aUndo"></button><button id="aClear" data-i18n="aClear"></button>
     </div>
   </div>
 </div>
@@ -167,13 +168,19 @@ main{padding:4px 12px 120px}
 'use strict';
 var $=function(id){return document.getElementById(id)};
 var WD=['日','一','二','三','四','五','六'];
-var QUICK=['SN:','WO-','故障現象：','原因：','處理：','更換零件：','待辦：'];
-var EXPENSE=['早餐費 ','午餐費 ','晚餐費 ','停車費 ','雜項 '];
+var LANG=(function(){try{var l=localStorage.getItem('tsLang');if(l==='zh'||l==='en')return l}catch(e){}return /^zh/i.test(navigator.language||'')?'zh':'en'})();
+var T={zh:{title:'Timestamp 現場記事',menu:'選單',search:'搜尋',jump:'跳到日期',add:'新增',back:'返回',searchPh:'搜尋記事（機台、工單、錯誤碼…）',newNote:'新記事',save:'儲存',custPh:'客戶別',machPh:'機台別',txtPh:'機台 / 工單 / 現象 / 處理…',camera:'拍照',gallery:'相簿',copy:'複製/分享',hint:'點照片可加箭頭、圈選、畫筆、文字標註',del:'刪除此記事',delConfirm:'再按一次確認刪除',mExp:'匯出備份（JSON，含照片）',mImp:'匯入備份',mTxt:'複製全部文字記事',mLang:'🌐 English',aTitle:'標註照片',aCancel:'取消',aRestore:'還原原圖',aDone:'完成',aTxtPh:'輸入標註文字',aAdd:'加入',aArrow:'↗ 箭頭',aCircle:'◯ 圈選',aPen:'✎ 畫筆',aText:'T 文字',aUndo:'↶ 復原',aClear:'清除',empty:'還沒有記事\n按右下角 ＋ 新增，會自動記錄時間',noMatch:'找不到符合的記事',annotated:'已標註',memWarnShort:'⚠ 此環境無法永久儲存',memWarn:'⚠ 此環境無法永久儲存，關閉後資料會消失。請匯出備份。',processing:'處理照片中…',added:'已加入 {0} 張照片',custLbl:'客戶：',machLbl:'機台：',copied:'已複製',copyFail:'無法複製',stored:'資料與照片存在這支手機的瀏覽器內（已要求持久儲存）。',lastBackup:'\n上次備份：',noBackup:'\n尚未備份過。',backedUp:'備份已存到手機「下載」資料夾：',exportFail:'匯出失敗',imported:'已匯入，新增 {0} 筆',importFail:'匯入失敗：檔案格式不正確',openFail:'無法開啟照片',restored:'已還原原圖',annotFail:'儲存標註失敗',annotSaved:'已儲存標註',deleted:'已刪除',noBefore:'該日之前沒有記事',noNotes:'（沒有記事）',remind:'超過 7 天沒備份了，建議到左上選單「匯出備份」'},
+en:{title:'Timestamp Field Notes',menu:'Menu',search:'Search',jump:'Jump to date',add:'New note',back:'Back',searchPh:'Search notes (machine, work order, error code…)',newNote:'New note',save:'Save',custPh:'Customer',machPh:'Machine',txtPh:'Machine / work order / symptom / action…',camera:'Take photo',gallery:'Gallery',copy:'Copy / Share',hint:'Tap a photo to annotate it with arrows, circles, pen or text',del:'Delete this note',delConfirm:'Tap again to confirm',mExp:'Export backup (JSON, with photos)',mImp:'Import backup',mTxt:'Copy all notes as text',mLang:'🌐 中文',aTitle:'Annotate photo',aCancel:'Cancel',aRestore:'Restore original',aDone:'Done',aTxtPh:'Enter label text',aAdd:'Add',aArrow:'↗ Arrow',aCircle:'◯ Circle',aPen:'✎ Pen',aText:'T Text',aUndo:'↶ Undo',aClear:'Clear',empty:'No notes yet\nTap ＋ to add one. The time is recorded automatically.',noMatch:'No matching notes',annotated:'Annotated',memWarnShort:'⚠ Notes cannot be saved permanently here',memWarn:'⚠ Notes cannot be saved permanently here and will be lost when you close this page. Please export a backup.',processing:'Processing photos…',added:'Added {0} photo(s)',custLbl:'Customer: ',machLbl:'Machine: ',copied:'Copied',copyFail:'Could not copy',stored:'Notes and photos are stored in this phone\'s browser (persistent storage requested).',lastBackup:'\nLast backup: ',noBackup:'\nNo backup yet.',backedUp:'Backup saved to your Downloads folder: ',exportFail:'Export failed',imported:'Imported. {0} new note(s)',importFail:'Import failed: not a valid backup file',openFail:'Could not open photo',restored:'Original restored',annotFail:'Could not save annotation',annotSaved:'Annotation saved',deleted:'Deleted',noBefore:'No notes on or before that date',noNotes:'(no notes)',remind:'No backup for over 7 days. Use Menu → Export backup.'}};
+function t(k,a){var v=(T[LANG]&&T[LANG][k])||T.zh[k]||k;return a===undefined?v:v.replace('{0}',a)}
+var WDE=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+var QUICKS={zh:['SN:','WO-','故障現象：','原因：','處理：','更換零件：','待辦：'],en:['SN:','WO-','Symptom: ','Cause: ','Action: ','Parts replaced: ','To do: ']};
+var EXPENSES={zh:['早餐費 ','午餐費 ','晚餐費 ','停車費 ','雜項 '],en:['Breakfast ','Lunch ','Dinner ','Parking ','Misc ']};
 var notes=[],mem=false,db=null,cur=null,search='';
 
 function pad(n){return n<10?'0'+n:''+n}
 function dkey(d){return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()}
-function dlabel(d){return dkey(d)+'（週'+WD[d.getDay()]+'）'}
+function dlabel(d){return LANG==='zh'?dkey(d)+'（週'+WD[d.getDay()]+'）':WDE[d.getDay()]+', '+MON[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear()}
 function tlabel(d){return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())}
 function toast(m){var t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display='none'},2200)}
 
@@ -220,7 +227,7 @@ function render(){
   var list=notes.filter(function(n){return !q||(n.text+' '+(n.customer||'')+' '+(n.machine||'')).toLowerCase().indexOf(q)>-1}).sort(function(a,b){return b.ts-a.ts});
   if(!list.length){
     var e=document.createElement('div');e.className='empty';
-    e.textContent=q?'找不到符合的記事':'還沒有記事\n按右下角 ＋ 新增，會自動記錄時間';
+    e.textContent=q?t('noMatch'):t('empty');
     e.style.whiteSpace='pre-line';box.appendChild(e);return;
   }
   var last='';
@@ -270,7 +277,7 @@ function refreshLists(){
 /* ---------- editor ---------- */
 function openEditor(n){
   if(n){cur={id:n.id,ts:n.ts,photos:n.photos.slice(),isNew:false};$('txt').value=n.text;$('fCust').value=n.customer||'';$('fMach').value=n.machine||'';$('eTitle').textContent=dlabel(new Date(n.ts))+' '+tlabel(new Date(n.ts));$('eDel').style.display='block'}
-  else{var now=Date.now();cur={id:'n'+now+Math.random().toString(36).slice(2,6),ts:now,photos:[],isNew:true};$('txt').value='';$('fCust').value='';$('fMach').value='';$('eTitle').textContent='新記事 '+tlabel(new Date(now));$('eDel').style.display='none'}
+  else{var now=Date.now();cur={id:'n'+now+Math.random().toString(36).slice(2,6),ts:now,photos:[],isNew:true};$('txt').value='';$('fCust').value='';$('fMach').value='';$('eTitle').textContent=t('newNote')+' '+tlabel(new Date(now));$('eDel').style.display='none'}
   drawPhotos();$('ed').classList.add('on');
   if(!n)setTimeout(function(){$('txt').focus()},50);
 }
@@ -280,7 +287,7 @@ function drawPhotos(){
     var w=document.createElement('div'),im=document.createElement('img');im.src=purl(p);im.onclick=function(){openAnnot(i)};
     var b=document.createElement('button');b.textContent='×';b.onclick=function(){cur.photos.splice(i,1);drawPhotos()};
     w.appendChild(im);w.appendChild(b);
-    if(p.orig){var mk=document.createElement('span');mk.className='mk';mk.textContent='已標註';w.appendChild(mk)}
+    if(p.orig){var mk=document.createElement('span');mk.className='mk';mk.textContent=t('annotated');w.appendChild(mk)}
     g.appendChild(w);
   });
 }
@@ -291,7 +298,7 @@ function saveEditor(){
   var n={id:cur.id,ts:cur.ts,text:text,customer:$('fCust').value.trim(),machine:$('fMach').value.trim(),photos:cur.photos};
   var i=notes.findIndex(function(x){return x.id===n.id});
   if(i>-1)notes[i]=n;else notes.push(n);
-  dbPut(n).then(function(){render();closeEditor();if(mem)toast('⚠ 此環境無法永久儲存')});
+  dbPut(n).then(function(){render();closeEditor();if(mem)toast(t('memWarnShort'))});
 }
 function insertText(s){
   var t=$('txt'),a=t.selectionStart||0,b=t.selectionEnd||0,v=t.value;
@@ -323,10 +330,10 @@ function compress(file,max){
 }
 function addFiles(files){
   if(!cur||!files.length)return;
-  toast('處理照片中…');
+  toast(t('processing'));
   var arr=Array.prototype.slice.call(files);
   arr.reduce(function(p,f){return p.then(function(){return compress(f)}).then(function(b){cur.photos.push({blob:b})})},Promise.resolve())
-    .then(function(){drawPhotos();toast('已加入 '+arr.length+' 張照片')});
+    .then(function(){drawPhotos();toast(t('added',arr.length))});
 }
 
 /* ---------- viewer ---------- */
@@ -336,23 +343,23 @@ $('vw').onclick=function(){$('vw').classList.remove('on')};
 /* ---------- share / export ---------- */
 function noteText(n){
   var d=new Date(n.ts),h=dlabel(d)+' '+tlabel(d);
-  if(n.customer)h+='\n客戶：'+n.customer;
-  if(n.machine)h+='\n機台：'+n.machine;
+  if(n.customer)h+='\n'+t('custLbl')+n.customer;
+  if(n.machine)h+='\n'+t('machLbl')+n.machine;
   return h+'\n'+n.text;
 }
 function copyText(s){
   if(navigator.share){return navigator.share({text:s}).catch(function(){})}
-  if(navigator.clipboard){return navigator.clipboard.writeText(s).then(function(){toast('已複製')},function(){toast('無法複製')})}
-  toast('無法複製');
+  if(navigator.clipboard){return navigator.clipboard.writeText(s).then(function(){toast(t('copied'))},function(){toast(t('copyFail'))})}
+  toast(t('copyFail'));
 }
 function blobToData(b){return new Promise(function(res){var r=new FileReader();r.onload=function(){res(r.result)};r.readAsDataURL(b)})}
 function dataToBlob(u){return fetch(u).then(function(r){return r.blob()})}
 function markBackup(){try{localStorage.setItem('tsLastBackup',String(Date.now()))}catch(e){}updateInfo()}
 function lastBackup(){try{return +localStorage.getItem('tsLastBackup')||0}catch(e){return 0}}
 function updateInfo(){
-  if(mem){$('mInfo').textContent='⚠ 此環境無法永久儲存，關閉後資料會消失。請匯出備份。';return}
-  var lb=lastBackup(),s='資料與照片存在這支手機的瀏覽器內（已要求持久儲存）。';
-  s+=lb?'\n上次備份：'+dlabel(new Date(lb))+' '+tlabel(new Date(lb)):'\n尚未備份過。';
+  if(mem){$('mInfo').textContent=t('memWarn');return}
+  var lb=lastBackup(),s=t('stored');
+  s+=lb?t('lastBackup')+dlabel(new Date(lb))+' '+tlabel(new Date(lb)):t('noBackup');
   $('mInfo').style.whiteSpace='pre-line';$('mInfo').textContent=s;
 }
 function exportAll(){
@@ -362,8 +369,8 @@ function exportAll(){
     var blob=new Blob([JSON.stringify({app:'timestamp-notes',v:1,notes:out})],{type:'application/json'});
     var d=new Date(),name='timestamp-backup-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'.json';
     var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();
-    markBackup();toast('備份已存到手機「下載」資料夾：'+name);
-  }).catch(function(){toast('匯出失敗')});
+    markBackup();toast(t('backedUp')+name);
+  }).catch(function(){toast(t('exportFail'))});
 }
 function importAll(file){
   file.text().then(function(t){
@@ -379,8 +386,8 @@ function importAll(file){
       var i=notes.findIndex(function(x){return x.id===n.id});
       if(i>-1)notes[i]=n;else{notes.push(n);c++}
       return dbPut(n);
-    })},Promise.resolve()).then(function(){render();toast('已匯入，新增 '+c+' 筆')});
-  }).catch(function(){toast('匯入失敗：檔案格式不正確')});
+    })},Promise.resolve()).then(function(){render();toast(t('imported',c))});
+  }).catch(function(){toast(t('importFail'))});
 }
 
 /* ---------- photo annotator ---------- */
@@ -424,7 +431,7 @@ function openAnnot(i){
     $('aRestore').style.display=p.orig?'inline-block':'none';
     $('an').classList.add('on');fitCanvas();redraw();
   };
-  im.onerror=function(){toast('無法開啟照片')};
+  im.onerror=function(){toast(t('openFail'))};
   im.src=purl(p);
 }
 function closeAnnot(){$('an').classList.remove('on');$('atb').classList.remove('on');an.img=null;an.cur=null}
@@ -464,16 +471,16 @@ $('aUndo').onclick=function(){an.shapes.pop();redraw()};
 $('aClear').onclick=function(){an.shapes=[];redraw()};
 $('aCancel').onclick=closeAnnot;
 $('aRestore').onclick=function(){
-  var old=cur.photos[an.i];if(old&&old.orig){cur.photos[an.i]={blob:old.orig};drawPhotos();toast('已還原原圖')}
+  var old=cur.photos[an.i];if(old&&old.orig){cur.photos[an.i]={blob:old.orig};drawPhotos();toast(t('restored'))}
   closeAnnot();
 };
 $('aSave').onclick=function(){
   if(!an.shapes.length){closeAnnot();return}
   an.cur=null;redraw();
   cv.toBlob(function(b){
-    if(!b){toast('儲存標註失敗');return}
+    if(!b){toast(t('annotFail'));return}
     var old=cur.photos[an.i];cur.photos[an.i]={blob:b,orig:old.orig||old.blob};
-    drawPhotos();closeAnnot();toast('已儲存標註');
+    drawPhotos();closeAnnot();toast(t('annotSaved'));
   },'image/jpeg',0.88);
 };
 
@@ -486,9 +493,9 @@ $('eBack').onclick=function(){
 };
 $('eSave').onclick=saveEditor;
 $('eDel').onclick=function(){
-  if($('eDel').dataset.arm!=='1'){$('eDel').dataset.arm='1';$('eDel').textContent='再按一次確認刪除';setTimeout(function(){$('eDel').dataset.arm='0';$('eDel').textContent='刪除此記事'},3000);return}
-  var id=cur.id;notes=notes.filter(function(n){return n.id!==id});dbDel(id).then(function(){render();closeEditor();toast('已刪除')});
-  $('eDel').dataset.arm='0';$('eDel').textContent='刪除此記事';
+  if($('eDel').dataset.arm!=='1'){$('eDel').dataset.arm='1';$('eDel').textContent=t('delConfirm');setTimeout(function(){$('eDel').dataset.arm='0';$('eDel').textContent=t('del')},3000);return}
+  var id=cur.id;notes=notes.filter(function(n){return n.id!==id});dbDel(id).then(function(){render();closeEditor();toast(t('deleted'))});
+  $('eDel').dataset.arm='0';$('eDel').textContent=t('del');
 };
 $('bCam').onclick=function(){$('fCam').click()};
 $('bGal').onclick=function(){$('fGal').click()};
@@ -496,8 +503,20 @@ $('fCam').onchange=function(){addFiles(this.files);this.value=''};
 $('fGal').onchange=function(){addFiles(this.files);this.value=''};
 $('bShare').onclick=function(){copyText(noteText({ts:cur.ts,text:$('txt').value,customer:$('fCust').value.trim(),machine:$('fMach').value.trim()}))};
 var ch=$('chips');
-QUICK.forEach(function(s){var c=document.createElement('span');c.className='chip';c.textContent=s;c.onclick=function(){insertText(s)};ch.appendChild(c)});
-EXPENSE.forEach(function(s){var c=document.createElement('span');c.className='chip exp';c.textContent=s.trim();c.onclick=function(){insertText(s)};ch.appendChild(c)});
+function buildChips(){
+  ch.innerHTML='';
+  QUICKS[LANG].forEach(function(s){var c=document.createElement('span');c.className='chip';c.textContent=s;c.onclick=function(){insertText(s)};ch.appendChild(c)});
+  EXPENSES[LANG].forEach(function(s){var c=document.createElement('span');c.className='chip exp';c.textContent=s.trim();c.onclick=function(){insertText(s)};ch.appendChild(c)});
+}
+function applyLang(skipRender){
+  document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';document.title=t('title');
+  Array.prototype.forEach.call(document.querySelectorAll('[data-i18n]'),function(e){e.textContent=t(e.dataset.i18n)});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-ph]'),function(e){e.placeholder=t(e.dataset.ph)});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-al]'),function(e){e.setAttribute('aria-label',t(e.dataset.al))});
+  buildChips();updateInfo();if(!skipRender)render();
+}
+$('mLang').onclick=function(){LANG=LANG==='zh'?'en':'zh';try{localStorage.setItem('tsLang',LANG)}catch(e){}$('menu').classList.remove('on');applyLang()};
+applyLang(true);
 
 $('bSearch').onclick=function(){
   var b=$('searchbar'),on=b.style.display!=='block';b.style.display=on?'block':'none';
@@ -509,7 +528,7 @@ $('dPick').onchange=function(){
   if(!this.value)return;var a=this.value.split('-'),end=new Date(+a[0],+a[1]-1,+a[2],23,59,59,999).getTime();
   var hs=document.querySelectorAll('.dh'),hit=null;
   for(var i=0;i<hs.length;i++){if(+hs[i].dataset.ts<=end){hit=hs[i];break}}
-  if(hit){hit.scrollIntoView({behavior:'smooth',block:'start'});window.scrollBy(0,-60)}else toast('該日之前沒有記事');
+  if(hit){hit.scrollIntoView({behavior:'smooth',block:'start'});window.scrollBy(0,-60)}else toast(t('noBefore'));
 };
 $('bMenu').onclick=function(){$('menu').classList.add('on')};
 $('menu').onclick=function(e){if(e.target===this)this.classList.remove('on')};
@@ -517,7 +536,7 @@ $('mExp').onclick=function(){$('menu').classList.remove('on');exportAll()};
 $('mImp').onclick=function(){$('menu').classList.remove('on');$('fImp').click()};
 $('fImp').onchange=function(){if(this.files[0])importAll(this.files[0]);this.value=''};
 $('mTxt').onclick=function(){$('menu').classList.remove('on');
-  var s=notes.slice().sort(function(a,b){return b.ts-a.ts}).map(noteText).join('\n\n');copyText(s||'（沒有記事）')};
+  var s=notes.slice().sort(function(a,b){return b.ts-a.ts}).map(noteText).join('\n\n');copyText(s||t('noNotes'))};
 window.addEventListener('popstate',function(){});
 
 openDB().then(function(ok){
@@ -527,8 +546,8 @@ openDB().then(function(ok){
   notes=rows.map(function(r){return{id:r.id,ts:r.ts,text:r.text||'',customer:r.customer||'',machine:r.machine||'',photos:(r.photos||[]).map(function(p){return{blob:p.blob,orig:p.orig}})}});
   updateInfo();
   render();
-  if(mem)toast('⚠ 此環境無法永久儲存');
-  else if(notes.length&&Date.now()-lastBackup()>7*864e5)setTimeout(function(){toast('超過 7 天沒備份了，建議到左上選單「匯出備份」')},1200);
+  if(mem)toast(t('memWarnShort'));
+  else if(notes.length&&Date.now()-lastBackup()>7*864e5)setTimeout(function(){toast(t('remind'))},1200);
   try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(function(){})}catch(e){}
   try{if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(function(){})}catch(e){}
 });
