@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2196F3">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Timestamp 現場記事</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#fafafa;color:#212121;font-family:Roboto,"Noto Sans TC",system-ui,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#2196F3;color:#fff;height:56px;display:flex;align-items:center;padding:0 8px;gap:4px;box-shadow:0 2px 4px rgba(0,0,0,.25)}
+header h1{flex:1;font-size:20px;font-weight:500;margin:0 0 0 8px}
+.ib{background:none;border:0;color:#fff;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;cursor:pointer}
+.ib:active{background:rgba(255,255,255,.2)}
+.ib svg{width:24px;height:24px;fill:currentColor}
+#searchbar{display:none;background:#fff;padding:8px 12px;border-bottom:1px solid #ddd;position:sticky;top:56px;z-index:4}
+#searchbar input{width:100%;font-size:16px;padding:10px 12px;border:1px solid #bbb;border-radius:8px}
+main{padding:4px 12px 120px}
+.dh{display:flex;align-items:center;gap:10px;margin:16px 0 8px;font-size:24px;font-weight:700;color:#424242}
+.dh i{width:22px;height:22px;border-radius:50%;background:#ff4081;flex:none}
+.card{background:#fff;border-radius:3px;box-shadow:0 1px 3px rgba(0,0,0,.25);padding:10px 12px;margin-bottom:10px}
+.card .t{display:flex;align-items:center;gap:8px;font-weight:700;font-size:20px;color:#424242;padding-bottom:6px;border-bottom:2px solid #e0e0e0}
+.card .t i{width:14px;height:14px;border-radius:50%;border:2px solid #ff4081;flex:none}
+.card .t span.n{margin-left:auto;font-size:13px;font-weight:400;color:#888}
+.card .b{white-space:pre-wrap;word-break:break-word;font-size:18px;line-height:1.35;padding-top:8px;color:#444}
+.ph{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.ph img{width:92px;height:92px;object-fit:cover;border-radius:6px;background:#eee}
+.empty{text-align:center;color:#999;margin-top:80px;font-size:16px;line-height:1.6}
+#fab{position:fixed;right:18px;bottom:calc(22px + env(safe-area-inset-bottom));width:60px;height:60px;border-radius:50%;background:#2196F3;color:#fff;border:0;box-shadow:0 3px 8px rgba(0,0,0,.4);display:grid;place-items:center;z-index:6;cursor:pointer}
+#fab svg{width:30px;height:30px;fill:#fff}
+#fab:active{background:#1976D2}
+/* editor */
+#ed{position:fixed;inset:0;background:#fff;z-index:20;display:none;flex-direction:column}
+#ed.on{display:flex}
+#ed .bar{background:#2196F3;color:#fff;height:56px;display:flex;align-items:center;padding:0 6px;gap:2px}
+#ed .bar .ttl{flex:1;font-size:18px;font-weight:500;margin-left:6px}
+#ed .bar button.sv{background:#fff;color:#1976D2;border:0;border-radius:18px;padding:8px 18px;font-size:16px;font-weight:700;margin-right:6px}
+#ed .body{flex:1;overflow:auto;padding:12px}
+#txt{width:100%;min-height:170px;font-size:18px;line-height:1.4;border:1px solid #ccc;border-radius:8px;padding:10px;font-family:inherit;resize:vertical}
+.tools{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.tb{display:flex;align-items:center;gap:6px;border:1px solid #2196F3;color:#1976D2;background:#fff;border-radius:22px;padding:10px 16px;font-size:16px;cursor:pointer}
+.tb svg{width:22px;height:22px;fill:currentColor}
+.tb:active{background:#e3f2fd}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.chip{background:#eceff1;border-radius:14px;padding:6px 12px;font-size:15px;color:#37474f;cursor:pointer}
+.chip.exp{background:#fff3e0;color:#e65100}
+.flds{display:flex;gap:8px;margin-bottom:10px}
+.flds input{flex:1;min-width:0;font-size:17px;padding:10px;border:1px solid #ccc;border-radius:8px;font-family:inherit}
+.hint{font-size:13px;color:#888;margin:2px 0 6px}
+.bd{display:flex;gap:6px;flex-wrap:wrap;padding-top:8px}
+.bd span{font-size:14px;border-radius:12px;padding:3px 10px;cursor:pointer}
+.bd .c{background:#e3f2fd;color:#1565c0}
+.bd .m{background:#e8f5e9;color:#2e7d32}
+.eph .mk{position:absolute;left:4px;bottom:4px;background:rgba(255,23,68,.9);color:#fff;font-size:12px;border-radius:10px;padding:2px 7px}
+/* annotator */
+#an{position:fixed;inset:0;background:#111;z-index:50;display:none;flex-direction:column}
+#an.on{display:flex}
+#an .top{display:flex;align-items:center;gap:8px;padding:8px;padding-top:calc(8px + env(safe-area-inset-top));color:#fff}
+#an .top b{flex:1;font-size:16px}
+#an .top button{border:0;border-radius:18px;padding:8px 16px;font-size:15px;background:#37474f;color:#fff}
+#an .top button.pri{background:#2196F3;font-weight:700}
+#an .stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#acv{touch-action:none;background:#000}
+#an .tools2{padding:8px 8px calc(10px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;background:#1b1b1b}
+#an .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+#an .row button{border:2px solid transparent;background:#37474f;color:#fff;border-radius:10px;padding:9px 14px;font-size:16px}
+#an .row button.sel{border-color:#2196F3;background:#0d47a1}
+#an .row .col{width:38px;height:38px;border-radius:50%;padding:0;border:3px solid #555}
+#an .row .col.sel{border-color:#fff}
+#atb{display:none;position:absolute;left:10px;right:10px;bottom:150px;background:#fff;border-radius:10px;padding:10px;gap:8px;box-shadow:0 4px 16px rgba(0,0,0,.5)}
+#atb.on{display:flex}
+#atb input{flex:1;min-width:0;font-size:18px;padding:8px;border:1px solid #bbb;border-radius:6px}
+#atb button{border:0;border-radius:6px;padding:8px 14px;font-size:16px;background:#2196F3;color:#fff}
+#atb button.g{background:#eee;color:#333}
+.eph{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.eph div{position:relative;aspect-ratio:1}
+.eph img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+.eph button{position:absolute;top:4px;right:4px;width:30px;height:30px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:18px;line-height:1}
+.del{margin-top:24px;color:#d32f2f;background:none;border:1px solid #d32f2f;border-radius:8px;padding:10px 16px;font-size:16px}
+/* viewer */
+#vw{position:fixed;inset:0;background:#000;z-index:40;display:none;align-items:center;justify-content:center}
+#vw.on{display:flex}
+#vw img{max-width:100%;max-height:100%;object-fit:contain}
+#vw .x{position:absolute;top:calc(10px + env(safe-area-inset-top));right:12px;color:#fff;background:rgba(255,255,255,.2);border:0;width:44px;height:44px;border-radius:50%;font-size:24px}
+#toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:#323232;color:#fff;padding:10px 18px;border-radius:22px;font-size:15px;z-index:60;display:none;max-width:88%;text-align:center}
+#menu{position:fixed;inset:0;z-index:30;display:none;background:rgba(0,0,0,.4)}
+#menu.on{display:block}
+#menu .p{background:#fff;width:78%;max-width:320px;height:100%;padding:20px 0}
+#menu .p h2{margin:0 20px 12px;font-size:20px}
+#menu .p button{display:block;width:100%;text-align:left;border:0;background:none;padding:14px 20px;font-size:17px}
+#menu .p button:active{background:#eee}
+#menu .p small{display:block;margin:16px 20px 0;color:#777;line-height:1.5}
+</style>
+</head>
+<body>
+<header>
+  <button class="ib" id="bMenu" aria-label="選單"><svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+  <h1>Timestamp</h1>
+  <button class="ib" id="bSearch" aria-label="搜尋"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></button>
+  <button class="ib" id="bCal" aria-label="跳到日期"><svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg></button>
+</header>
+<div id="searchbar"><input id="q" type="search" placeholder="搜尋記事（機台、工單、錯誤碼…）"></div>
+<main id="list"></main>
+<button id="fab" aria-label="新增"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+
+<div id="ed">
+  <div class="bar">
+    <button class="ib" id="eBack" aria-label="返回"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <div class="ttl" id="eTitle">新記事</div>
+    <button class="sv" id="eSave">儲存</button>
+  </div>
+  <div class="body">
+    <div class="flds">
+      <input id="fCust" list="dlCust" placeholder="客戶別" autocomplete="off">
+      <input id="fMach" list="dlMach" placeholder="機台別" autocomplete="off">
+    </div>
+    <datalist id="dlCust"></datalist><datalist id="dlMach"></datalist>
+    <div class="chips" id="chips"></div>
+    <textarea id="txt" placeholder="機台 / 工單 / 現象 / 處理…"></textarea>
+    <div class="tools">
+      <button class="tb" id="bCam"><svg viewBox="0 0 24 24"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zM9 2 7.17 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3.17L15 2H9zm3 15a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/></svg>拍照</button>
+      <button class="tb" id="bGal"><svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z"/></svg>相簿</button>
+      <button class="tb" id="bShare"><svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg>複製/分享</button>
+    </div>
+    <div class="hint">點照片可加箭頭、圈選、畫筆、文字標註</div>
+    <div class="eph" id="eph"></div>
+    <button class="del" id="eDel" style="display:none">刪除此記事</button>
+  </div>
+</div>
+<input type="file" id="fCam" accept="image/*" capture="environment" hidden>
+<input type="file" id="fGal" accept="image/*" multiple hidden>
+<input type="file" id="fImp" accept="application/json,.json" hidden>
+<input type="date" id="dPick" style="position:fixed;opacity:0;pointer-events:none;top:60px;left:0">
+<div id="vw"><button class="x" id="vx">✕</button><img id="vimg" alt=""></div>
+<div id="menu"><div class="p">
+  <h2>Timestamp</h2>
+  <button id="mExp">匯出備份（JSON，含照片）</button>
+  <button id="mImp">匯入備份</button>
+  <button id="mTxt">複製全部文字記事</button>
+  <small id="mInfo"></small>
+</div></div>
+<div id="an">
+  <div class="top"><button id="aCancel">取消</button><b>標註照片</b><button id="aRestore" style="display:none">還原原圖</button><button class="pri" id="aSave">完成</button></div>
+  <div class="stage" id="stage"><canvas id="acv"></canvas></div>
+  <div id="atb"><input id="atxt" placeholder="輸入標註文字"><button id="atOk">加入</button><button class="g" id="atNo">取消</button></div>
+  <div class="tools2">
+    <div class="row" id="aTools">
+      <button data-tool="arrow" class="sel">↗ 箭頭</button><button data-tool="circle">◯ 圈選</button><button data-tool="pen">✎ 畫筆</button><button data-tool="text">T 文字</button>
+    </div>
+    <div class="row" id="aCols">
+      <button class="col sel" data-c="#ff1744" style="background:#ff1744"></button>
+      <button class="col" data-c="#ffea00" style="background:#ffea00"></button>
+      <button class="col" data-c="#00e676" style="background:#00e676"></button>
+      <button class="col" data-c="#2979ff" style="background:#2979ff"></button>
+      <button class="col" data-c="#ffffff" style="background:#fff"></button>
+      <button id="aUndo">↶ 復原</button><button id="aClear">清除</button>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id)};
+var WD=['日','一','二','三','四','五','六'];
+var QUICK=['SN:','WO-','故障現象：','原因：','處理：','更換零件：','待辦：'];
+var EXPENSE=['早餐費 ','午餐費 ','晚餐費 ','停車費 ','雜項 '];
+var notes=[],mem=false,db=null,cur=null,search='';
+
+function pad(n){return n<10?'0'+n:''+n}
+function dkey(d){return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()}
+function dlabel(d){return dkey(d)+'（週'+WD[d.getDay()]+'）'}
+function tlabel(d){return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())}
+function toast(m){var t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display='none'},2200)}
+
+/* ---------- storage (IndexedDB) ---------- */
+function openDB(){
+  return new Promise(function(res){
+    try{
+      var r=indexedDB.open('timestamp-notes',1);
+      r.onupgradeneeded=function(){r.result.createObjectStore('notes',{keyPath:'id'})};
+      r.onsuccess=function(){db=r.result;res(true)};
+      r.onerror=function(){res(false)};
+    }catch(e){res(false)}
+  });
+}
+function dbAll(){
+  return new Promise(function(res){
+    if(!db)return res([]);
+    var q=db.transaction('notes').objectStore('notes').getAll();
+    q.onsuccess=function(){res(q.result||[])};
+    q.onerror=function(){res([])};
+  });
+}
+function dbPut(n){
+  return new Promise(function(res){
+    if(!db)return res();
+    var tx=db.transaction('notes','readwrite');
+    tx.objectStore('notes').put({id:n.id,ts:n.ts,text:n.text,customer:n.customer||'',machine:n.machine||'',photos:n.photos.map(function(p){return{blob:p.blob,orig:p.orig}})});
+    tx.oncomplete=function(){res()};tx.onerror=function(){res()};
+  });
+}
+function dbDel(id){
+  return new Promise(function(res){
+    if(!db)return res();
+    var tx=db.transaction('notes','readwrite');tx.objectStore('notes').delete(id);
+    tx.oncomplete=function(){res()};tx.onerror=function(){res()};
+  });
+}
+function purl(p){if(!p.url)p.url=URL.createObjectURL(p.blob);return p.url}
+
+/* ---------- list ---------- */
+function render(){
+  var q=search.trim().toLowerCase(),box=$('list');box.innerHTML='';
+  refreshLists();
+  var list=notes.filter(function(n){return !q||(n.text+' '+(n.customer||'')+' '+(n.machine||'')).toLowerCase().indexOf(q)>-1}).sort(function(a,b){return b.ts-a.ts});
+  if(!list.length){
+    var e=document.createElement('div');e.className='empty';
+    e.textContent=q?'找不到符合的記事':'還沒有記事\n按右下角 ＋ 新增，會自動記錄時間';
+    e.style.whiteSpace='pre-line';box.appendChild(e);return;
+  }
+  var last='';
+  list.forEach(function(n){
+    var d=new Date(n.ts),k=dkey(d);
+    if(k!==last){
+      last=k;var h=document.createElement('div');h.className='dh';h.dataset.ts=n.ts;
+      h.appendChild(document.createElement('i'));
+      var s=document.createElement('span');s.textContent=dlabel(d);h.appendChild(s);box.appendChild(h);
+    }
+    var c=document.createElement('div');c.className='card';
+    var t=document.createElement('div');t.className='t';
+    t.appendChild(document.createElement('i'));
+    var ts=document.createElement('span');ts.textContent=tlabel(d);t.appendChild(ts);
+    if(n.photos.length){var pn=document.createElement('span');pn.className='n';pn.textContent='📷 '+n.photos.length;t.appendChild(pn)}
+    c.appendChild(t);
+    if(n.customer||n.machine){
+      var bd=document.createElement('div');bd.className='bd';
+      [['c',n.customer,'🏢 '],['m',n.machine,'⚙ ']].forEach(function(x){
+        if(!x[1])return;var s=document.createElement('span');s.className=x[0];s.textContent=x[2]+x[1];
+        s.onclick=function(ev){ev.stopPropagation();setSearch(x[1])};bd.appendChild(s);
+      });
+      c.appendChild(bd);
+    }
+    if(n.text){var b=document.createElement('div');b.className='b';b.textContent=n.text;c.appendChild(b)}
+    if(n.photos.length){
+      var ph=document.createElement('div');ph.className='ph';
+      n.photos.forEach(function(p){
+        var im=document.createElement('img');im.src=purl(p);im.loading='lazy';
+        im.onclick=function(ev){ev.stopPropagation();openViewer(purl(p))};ph.appendChild(im);
+      });
+      c.appendChild(ph);
+    }
+    c.onclick=function(){openEditor(n)};
+    box.appendChild(c);
+  });
+}
+
+function setSearch(v){$('searchbar').style.display='block';$('q').value=v;search=v;render();window.scrollTo(0,0)}
+function refreshLists(){
+  var c={},m={};
+  notes.forEach(function(n){if(n.customer)c[n.customer]=1;if(n.machine)m[n.machine]=1});
+  function fill(id,o){var d=$(id);d.innerHTML='';Object.keys(o).sort().forEach(function(k){var op=document.createElement('option');op.value=k;d.appendChild(op)})}
+  fill('dlCust',c);fill('dlMach',m);
+}
+
+/* ---------- editor ---------- */
+function openEditor(n){
+  if(n){cur={id:n.id,ts:n.ts,photos:n.photos.slice(),isNew:false};$('txt').value=n.text;$('fCust').value=n.customer||'';$('fMach').value=n.machine||'';$('eTitle').textContent=dlabel(new Date(n.ts))+' '+tlabel(new Date(n.ts));$('eDel').style.display='block'}
+  else{var now=Date.now();cur={id:'n'+now+Math.random().toString(36).slice(2,6),ts:now,photos:[],isNew:true};$('txt').value='';$('fCust').value='';$('fMach').value='';$('eTitle').textContent='新記事 '+tlabel(new Date(now));$('eDel').style.display='none'}
+  drawPhotos();$('ed').classList.add('on');
+  if(!n)setTimeout(function(){$('txt').focus()},50);
+}
+function drawPhotos(){
+  var g=$('eph');g.innerHTML='';
+  cur.photos.forEach(function(p,i){
+    var w=document.createElement('div'),im=document.createElement('img');im.src=purl(p);im.onclick=function(){openAnnot(i)};
+    var b=document.createElement('button');b.textContent='×';b.onclick=function(){cur.photos.splice(i,1);drawPhotos()};
+    w.appendChild(im);w.appendChild(b);
+    if(p.orig){var mk=document.createElement('span');mk.className='mk';mk.textContent='已標註';w.appendChild(mk)}
+    g.appendChild(w);
+  });
+}
+function closeEditor(){$('ed').classList.remove('on');cur=null}
+function saveEditor(){
+  var text=$('txt').value.replace(/\s+$/,'');
+  if(!text&&!cur.photos.length){closeEditor();return}
+  var n={id:cur.id,ts:cur.ts,text:text,customer:$('fCust').value.trim(),machine:$('fMach').value.trim(),photos:cur.photos};
+  var i=notes.findIndex(function(x){return x.id===n.id});
+  if(i>-1)notes[i]=n;else notes.push(n);
+  dbPut(n).then(function(){render();closeEditor();if(mem)toast('⚠ 此環境無法永久儲存')});
+}
+function insertText(s){
+  var t=$('txt'),a=t.selectionStart||0,b=t.selectionEnd||0,v=t.value;
+  var pre=(a>0&&v[a-1]!=='\n')?'\n':'';
+  t.value=v.slice(0,a)+pre+s+v.slice(b);
+  var p=a+pre.length+s.length;t.focus();t.setSelectionRange(p,p);
+}
+
+/* ---------- photos ---------- */
+function compress(file,max){
+  max=max||1600;
+  function fromBitmap(bmp){
+    var w=bmp.width,h=bmp.height,s=Math.min(1,max/Math.max(w,h));
+    var c=document.createElement('canvas');c.width=Math.round(w*s);c.height=Math.round(h*s);
+    c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
+    return new Promise(function(res){c.toBlob(function(b){res(b||file)},'image/jpeg',0.82)});
+  }
+  if(window.createImageBitmap){
+    return createImageBitmap(file,{imageOrientation:'from-image'}).then(fromBitmap).catch(viaImg);
+  }
+  return viaImg();
+  function viaImg(){
+    return new Promise(function(res){
+      var u=URL.createObjectURL(file),im=new Image();
+      im.onload=function(){fromBitmap(im).then(function(b){URL.revokeObjectURL(u);res(b)})};
+      im.onerror=function(){URL.revokeObjectURL(u);res(file)};im.src=u;
+    });
+  }
+}
+function addFiles(files){
+  if(!cur||!files.length)return;
+  toast('處理照片中…');
+  var arr=Array.prototype.slice.call(files);
+  arr.reduce(function(p,f){return p.then(function(){return compress(f)}).then(function(b){cur.photos.push({blob:b})})},Promise.resolve())
+    .then(function(){drawPhotos();toast('已加入 '+arr.length+' 張照片')});
+}
+
+/* ---------- viewer ---------- */
+function openViewer(u){$('vimg').src=u;$('vw').classList.add('on')}
+$('vw').onclick=function(){$('vw').classList.remove('on')};
+
+/* ---------- share / export ---------- */
+function noteText(n){
+  var d=new Date(n.ts),h=dlabel(d)+' '+tlabel(d);
+  if(n.customer)h+='\n客戶：'+n.customer;
+  if(n.machine)h+='\n機台：'+n.machine;
+  return h+'\n'+n.text;
+}
+function copyText(s){
+  if(navigator.share){return navigator.share({text:s}).catch(function(){})}
+  if(navigator.clipboard){return navigator.clipboard.writeText(s).then(function(){toast('已複製')},function(){toast('無法複製')})}
+  toast('無法複製');
+}
+function blobToData(b){return new Promise(function(res){var r=new FileReader();r.onload=function(){res(r.result)};r.readAsDataURL(b)})}
+function dataToBlob(u){return fetch(u).then(function(r){return r.blob()})}
+function markBackup(){try{localStorage.setItem('tsLastBackup',String(Date.now()))}catch(e){}updateInfo()}
+function lastBackup(){try{return +localStorage.getItem('tsLastBackup')||0}catch(e){return 0}}
+function updateInfo(){
+  if(mem){$('mInfo').textContent='⚠ 此環境無法永久儲存，關閉後資料會消失。請匯出備份。';return}
+  var lb=lastBackup(),s='資料與照片存在這支手機的瀏覽器內（已要求持久儲存）。';
+  s+=lb?'\n上次備份：'+dlabel(new Date(lb))+' '+tlabel(new Date(lb)):'\n尚未備份過。';
+  $('mInfo').style.whiteSpace='pre-line';$('mInfo').textContent=s;
+}
+function exportAll(){
+  Promise.all(notes.map(function(n){
+    return Promise.all(n.photos.map(function(p){return blobToData(p.blob)})).then(function(ph){return{id:n.id,ts:n.ts,text:n.text,customer:n.customer||'',machine:n.machine||'',photos:ph}});
+  })).then(function(out){
+    var blob=new Blob([JSON.stringify({app:'timestamp-notes',v:1,notes:out})],{type:'application/json'});
+    var d=new Date(),name='timestamp-backup-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'.json';
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();
+    markBackup();toast('備份已存到手機「下載」資料夾：'+name);
+  }).catch(function(){toast('匯出失敗')});
+}
+function importAll(file){
+  file.text().then(function(t){
+    var j=JSON.parse(t);if(!j||!j.notes)throw 0;
+    return Promise.all(j.notes.map(function(n){
+      return Promise.all((n.photos||[]).map(dataToBlob)).then(function(bl){
+        return{id:n.id,ts:n.ts,text:n.text||'',customer:n.customer||'',machine:n.machine||'',photos:bl.map(function(b){return{blob:b}})};
+      });
+    }));
+  }).then(function(list){
+    var c=0;
+    return list.reduce(function(p,n){return p.then(function(){
+      var i=notes.findIndex(function(x){return x.id===n.id});
+      if(i>-1)notes[i]=n;else{notes.push(n);c++}
+      return dbPut(n);
+    })},Promise.resolve()).then(function(){render();toast('已匯入，新增 '+c+' 筆')});
+  }).catch(function(){toast('匯入失敗：檔案格式不正確')});
+}
+
+/* ---------- photo annotator ---------- */
+var an={i:-1,img:null,shapes:[],tool:'arrow',color:'#ff1744',cur:null,W:0,H:0,tp:null};
+var cv=$('acv'),cx=cv.getContext('2d');
+function lw(){return Math.max(4,Math.round(Math.max(an.W,an.H)/220))}
+function fsz(){return Math.max(32,Math.round(Math.max(an.W,an.H)/28))}
+function fitCanvas(){
+  var st=$('stage'),aw=st.clientWidth,ah=st.clientHeight;if(!an.W||!aw||!ah)return;
+  var s=Math.min(aw/an.W,ah/an.H);cv.style.width=Math.floor(an.W*s)+'px';cv.style.height=Math.floor(an.H*s)+'px';
+}
+window.addEventListener('resize',fitCanvas);
+function drawShape(s){
+  var L=lw();cx.lineWidth=L;cx.strokeStyle=s.c;cx.fillStyle=s.c;cx.lineCap='round';cx.lineJoin='round';
+  if(s.t==='pen'){
+    cx.beginPath();s.p.forEach(function(q,k){if(k)cx.lineTo(q[0],q[1]);else cx.moveTo(q[0],q[1])});cx.stroke();
+  }else if(s.t==='arrow'){
+    var dx=s.x2-s.x1,dy=s.y2-s.y1;if(Math.hypot(dx,dy)<2)return;
+    var a=Math.atan2(dy,dx),h=Math.max(L*4,30);
+    cx.beginPath();cx.moveTo(s.x1,s.y1);cx.lineTo(s.x2-Math.cos(a)*h*0.6,s.y2-Math.sin(a)*h*0.6);cx.stroke();
+    cx.beginPath();cx.moveTo(s.x2,s.y2);
+    cx.lineTo(s.x2-h*Math.cos(a-0.45),s.y2-h*Math.sin(a-0.45));
+    cx.lineTo(s.x2-h*Math.cos(a+0.45),s.y2-h*Math.sin(a+0.45));cx.closePath();cx.fill();
+  }else if(s.t==='circle'){
+    cx.beginPath();cx.ellipse((s.x1+s.x2)/2,(s.y1+s.y2)/2,Math.abs(s.x2-s.x1)/2||1,Math.abs(s.y2-s.y1)/2||1,0,0,Math.PI*2);cx.stroke();
+  }else if(s.t==='text'){
+    var f=fsz();cx.font='bold '+f+'px "Noto Sans TC",sans-serif';cx.textBaseline='top';cx.lineWidth=f/5;
+    cx.strokeStyle=(s.c==='#ffffff'||s.c==='#ffea00'||s.c==='#00e676')?'#000':'#fff';
+    s.s.split('\n').forEach(function(line,k){cx.strokeText(line,s.x,s.y+k*f*1.2);cx.fillText(line,s.x,s.y+k*f*1.2)});
+  }
+}
+function redraw(){
+  if(!an.img)return;cx.drawImage(an.img,0,0,an.W,an.H);
+  an.shapes.forEach(drawShape);if(an.cur)drawShape(an.cur);
+}
+function openAnnot(i){
+  var p=cur.photos[i];an.i=i;an.shapes=[];an.cur=null;
+  var im=new Image();
+  im.onload=function(){
+    an.img=im;an.W=im.naturalWidth;an.H=im.naturalHeight;cv.width=an.W;cv.height=an.H;
+    $('aRestore').style.display=p.orig?'inline-block':'none';
+    $('an').classList.add('on');fitCanvas();redraw();
+  };
+  im.onerror=function(){toast('無法開啟照片')};
+  im.src=purl(p);
+}
+function closeAnnot(){$('an').classList.remove('on');$('atb').classList.remove('on');an.img=null;an.cur=null}
+function pt(e){var r=cv.getBoundingClientRect();return[(e.clientX-r.left)*an.W/r.width,(e.clientY-r.top)*an.H/r.height]}
+cv.addEventListener('pointerdown',function(e){
+  e.preventDefault();var q=pt(e);
+  if(an.tool==='text'){an.tp=q;$('atxt').value='';$('atb').classList.add('on');setTimeout(function(){$('atxt').focus()},30);return}
+  try{cv.setPointerCapture(e.pointerId)}catch(x){}
+  an.cur=an.tool==='pen'?{t:'pen',c:an.color,p:[q]}:{t:an.tool,c:an.color,x1:q[0],y1:q[1],x2:q[0],y2:q[1]};
+});
+cv.addEventListener('pointermove',function(e){
+  if(!an.cur)return;var q=pt(e);
+  if(an.cur.t==='pen')an.cur.p.push(q);else{an.cur.x2=q[0];an.cur.y2=q[1]}
+  redraw();
+});
+function endDraw(){
+  var s=an.cur;if(!s)return;an.cur=null;
+  var ok=s.t==='pen'?s.p.length>2:Math.hypot(s.x2-s.x1,s.y2-s.y1)>10;
+  if(ok)an.shapes.push(s);redraw();
+}
+cv.addEventListener('pointerup',endDraw);
+cv.addEventListener('pointercancel',endDraw);
+function addText(){
+  var v=$('atxt').value.trim();$('atb').classList.remove('on');
+  if(v&&an.tp){an.shapes.push({t:'text',c:an.color,x:an.tp[0],y:an.tp[1],s:v});redraw()}
+}
+$('atOk').onclick=addText;
+$('atxt').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();addText()}};
+$('atNo').onclick=function(){$('atb').classList.remove('on')};
+Array.prototype.forEach.call($('aTools').querySelectorAll('button'),function(b){
+  b.onclick=function(){an.tool=b.dataset.tool;Array.prototype.forEach.call($('aTools').querySelectorAll('button'),function(x){x.classList.toggle('sel',x===b)})};
+});
+Array.prototype.forEach.call($('aCols').querySelectorAll('.col'),function(b){
+  b.onclick=function(){an.color=b.dataset.c;Array.prototype.forEach.call($('aCols').querySelectorAll('.col'),function(x){x.classList.toggle('sel',x===b)})};
+});
+$('aUndo').onclick=function(){an.shapes.pop();redraw()};
+$('aClear').onclick=function(){an.shapes=[];redraw()};
+$('aCancel').onclick=closeAnnot;
+$('aRestore').onclick=function(){
+  var old=cur.photos[an.i];if(old&&old.orig){cur.photos[an.i]={blob:old.orig};drawPhotos();toast('已還原原圖')}
+  closeAnnot();
+};
+$('aSave').onclick=function(){
+  if(!an.shapes.length){closeAnnot();return}
+  an.cur=null;redraw();
+  cv.toBlob(function(b){
+    if(!b){toast('儲存標註失敗');return}
+    var old=cur.photos[an.i];cur.photos[an.i]={blob:b,orig:old.orig||old.blob};
+    drawPhotos();closeAnnot();toast('已儲存標註');
+  },'image/jpeg',0.88);
+};
+
+/* ---------- wiring ---------- */
+$('fab').onclick=function(){openEditor(null)};
+$('eBack').onclick=function(){
+  var dirty=cur&&($('txt').value.trim()||cur.photos.length)&&cur.isNew;
+  if(dirty&&!window.__confirmed){saveEditor();return}   // 新記事離開時自動儲存，避免遺失現場資料
+  saveEditor();
+};
+$('eSave').onclick=saveEditor;
+$('eDel').onclick=function(){
+  if($('eDel').dataset.arm!=='1'){$('eDel').dataset.arm='1';$('eDel').textContent='再按一次確認刪除';setTimeout(function(){$('eDel').dataset.arm='0';$('eDel').textContent='刪除此記事'},3000);return}
+  var id=cur.id;notes=notes.filter(function(n){return n.id!==id});dbDel(id).then(function(){render();closeEditor();toast('已刪除')});
+  $('eDel').dataset.arm='0';$('eDel').textContent='刪除此記事';
+};
+$('bCam').onclick=function(){$('fCam').click()};
+$('bGal').onclick=function(){$('fGal').click()};
+$('fCam').onchange=function(){addFiles(this.files);this.value=''};
+$('fGal').onchange=function(){addFiles(this.files);this.value=''};
+$('bShare').onclick=function(){copyText(noteText({ts:cur.ts,text:$('txt').value,customer:$('fCust').value.trim(),machine:$('fMach').value.trim()}))};
+var ch=$('chips');
+QUICK.forEach(function(s){var c=document.createElement('span');c.className='chip';c.textContent=s;c.onclick=function(){insertText(s)};ch.appendChild(c)});
+EXPENSE.forEach(function(s){var c=document.createElement('span');c.className='chip exp';c.textContent=s.trim();c.onclick=function(){insertText(s)};ch.appendChild(c)});
+
+$('bSearch').onclick=function(){
+  var b=$('searchbar'),on=b.style.display!=='block';b.style.display=on?'block':'none';
+  if(on)$('q').focus();else{$('q').value='';search='';render()}
+};
+$('q').oninput=function(){search=this.value;render()};
+$('bCal').onclick=function(){var p=$('dPick');try{p.showPicker?p.showPicker():p.click()}catch(e){p.click()}};
+$('dPick').onchange=function(){
+  if(!this.value)return;var a=this.value.split('-'),end=new Date(+a[0],+a[1]-1,+a[2],23,59,59,999).getTime();
+  var hs=document.querySelectorAll('.dh'),hit=null;
+  for(var i=0;i<hs.length;i++){if(+hs[i].dataset.ts<=end){hit=hs[i];break}}
+  if(hit){hit.scrollIntoView({behavior:'smooth',block:'start'});window.scrollBy(0,-60)}else toast('該日之前沒有記事');
+};
+$('bMenu').onclick=function(){$('menu').classList.add('on')};
+$('menu').onclick=function(e){if(e.target===this)this.classList.remove('on')};
+$('mExp').onclick=function(){$('menu').classList.remove('on');exportAll()};
+$('mImp').onclick=function(){$('menu').classList.remove('on');$('fImp').click()};
+$('fImp').onchange=function(){if(this.files[0])importAll(this.files[0]);this.value=''};
+$('mTxt').onclick=function(){$('menu').classList.remove('on');
+  var s=notes.slice().sort(function(a,b){return b.ts-a.ts}).map(noteText).join('\n\n');copyText(s||'（沒有記事）')};
+window.addEventListener('popstate',function(){});
+
+openDB().then(function(ok){
+  mem=!ok;
+  return dbAll();
+}).then(function(rows){
+  notes=rows.map(function(r){return{id:r.id,ts:r.ts,text:r.text||'',customer:r.customer||'',machine:r.machine||'',photos:(r.photos||[]).map(function(p){return{blob:p.blob,orig:p.orig}})}});
+  updateInfo();
+  render();
+  if(mem)toast('⚠ 此環境無法永久儲存');
+  else if(notes.length&&Date.now()-lastBackup()>7*864e5)setTimeout(function(){toast('超過 7 天沒備份了，建議到左上選單「匯出備份」')},1200);
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(function(){})}catch(e){}
+  try{if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(function(){})}catch(e){}
+});
+})();
+</script>
+</body>
+</html>
